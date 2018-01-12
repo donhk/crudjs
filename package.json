@@ -4,7 +4,7 @@
   "description": "sample crud app with node and mongo",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon server.js"
   },
   "repository": {
     "type": "git",
@@ -23,6 +23,10 @@
   },
   "homepage": "https://github.com/donhk/crudjs#readme",
   "dependencies": {
-    "express": "^4.16.2"
+    "express": "^4.16.2",
+    "nodemon": "^1.14.11"
+  },
+  "devDependencies": {
+    "nodemon": "^1.14.11"
   }
 }
