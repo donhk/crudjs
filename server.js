@@ -5,7 +5,7 @@ const MongoClient = require('mongodb').MongoClient
 app.use(bodyParser.urlencoded({extended: true}));
 
 var db
-MongoClient.connect('link-to-mongodb', (err, database) => {
+MongoClient.connect('mongodb://mongouser:soMePas12325s@127.0.0.1:27017/mydatabase', (err, database) => {
   if (err) return console.log(err)
   db = database
   app.listen(3000, () => {
