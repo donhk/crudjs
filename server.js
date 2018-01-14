@@ -1,23 +1,34 @@
 const express = require('express');
-const bodyParser= require('body-parser')
 const app = express();
+const bodyParser= require('body-parser')
 const MongoClient = require('mongodb').MongoClient
-app.use(bodyParser.urlencoded({extended: true}));
 
-var db
+var mydb
+
 MongoClient.connect('mongodb://mongouser:soMePas12325s@127.0.0.1:27017/mydatabase', (err, database) => {
   if (err) return console.log(err)
-  db = database
-  app.listen(3000, () => {
-      console.log('listening on 3000')
-      app.get('/', (req, res) => {
-            res.sendFile(__dirname + '/index.html');
-          });
-     app.post('/quotes', (req, res) => {
-        console.log('Hellooooooooooooooooo!')
-        console.log(req.body)
-     });
-  });
-});
+  mydb = database
+  app.listen(process.env.PORT || 6015, () => {
+    console.log('listening on 6015')
+  })
+})
 
-console.log('May Node be with you');
+app.use(bodyParser.urlencoded({extended: true}));
+
+app.get('/', (req, res) => {
+   res.sendFile(__dirname + '/index.html')
+})
+
+//https://stackoverflow.com/a/47694265/4170988
+app.post('/quotes', (req, res) => {
+  console.log(req.body)
+  //fix for mongodb version >= 3.0
+  const myAwesomeDB = mydb.db('mydatabase')
+  myAwesomeDB.collection('quotes').save(req.body, (err, result) => {
+    if (err) return console.log(err)
+    console.log('saved to database')
+    res.redirect('/')
+  })
+})
+
+//mongodb --port xxxxx use mydatabase db.quotes.find( {} )
