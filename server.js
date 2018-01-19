@@ -13,6 +13,7 @@ MongoClient.connect('mongodb://mongouser:soMePas12325s@127.0.0.1:27017/mydatabas
   })
 })
 
+app.set('view engine', 'ejs')
 app.use(bodyParser.urlencoded({extended: true}));
 
 app.get('/', (req, res) => {
@@ -32,3 +33,12 @@ app.post('/quotes', (req, res) => {
 })
 
 //mongodb --port xxxxx use mydatabase db.quotes.find( {} )
+app.get('/read', (req, res) => {
+  const myAwesomeDB = mydb.db('mydatabase')
+  //var cursor = myAwesomeDB.collection('quotes').find()
+  var cursor = myAwesomeDB.collection('quotes').find().toArray(function(err, results){
+  console.log(results)
+  // send HTML file populated with quotes here
+  })
+})
+
