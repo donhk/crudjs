@@ -14,7 +14,9 @@ MongoClient.connect('mongodb://mongouser:soMePas12325s@127.0.0.1:27017/mydatabas
 })
 
 app.set('view engine', 'ejs')
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({extended: true}))
+app.use(express.static('public'))
+app.use(bodyParser.json())
 
 app.get('/', (req, res) => {
   const myAwesomeDB = mydb.db('mydatabase')
@@ -38,4 +40,30 @@ app.post('/quotes', (req, res) => {
 })
 
 //mongodb --port xxxxx use mydatabase db.quotes.find( {} )
+app.put('/quotes', (req, res) => {
+  // Handle put request
+  const myAwesomeDB = mydb.db('mydatabase')
+  myAwesomeDB.collection('quotes')
+  .findOneAndUpdate({name: 'Yoda'}, {
+    $set: {
+      name: req.body.name,
+      quote: req.body.quote
+    }
+  }, {
+    sort: {_id: -1},
+    upsert: true
+  }, (err, result) => {
+    if (err) return res.send(err)
+    res.send(result)
+  })
+})
 
+app.delete('/quotes', (req, res) => {
+  // Handle delete  
+  const myAwesomeDB = mydb.db('mydatabase')
+  myAwesomeDB.collection('quotes').findOneAndDelete({name: req.body.name},
+  (err, result) => {
+    if (err) return res.send(500, err)
+    res.send({message: 'A darth vadar quote got deleted'})
+  })
+})
