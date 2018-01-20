@@ -17,7 +17,12 @@ app.set('view engine', 'ejs')
 app.use(bodyParser.urlencoded({extended: true}));
 
 app.get('/', (req, res) => {
-   res.sendFile(__dirname + '/index.html')
+  const myAwesomeDB = mydb.db('mydatabase')
+  var cursor = myAwesomeDB.collection('quotes').find().toArray((err, result) => {
+     if (err) return console.log(result)
+     // render index.ejs
+     res.render('index.ejs', {quotes: result})
+  })
 })
 
 //https://stackoverflow.com/a/47694265/4170988
@@ -33,12 +38,4 @@ app.post('/quotes', (req, res) => {
 })
 
 //mongodb --port xxxxx use mydatabase db.quotes.find( {} )
-app.get('/read', (req, res) => {
-  const myAwesomeDB = mydb.db('mydatabase')
-  //var cursor = myAwesomeDB.collection('quotes').find()
-  var cursor = myAwesomeDB.collection('quotes').find().toArray(function(err, results){
-  console.log(results)
-  // send HTML file populated with quotes here
-  })
-})
 
